@@ -2,29 +2,29 @@
 using System.ComponentModel.DataAnnotations;
 using Vvertigoo.Cache.Services;
 
-namespace Vvertigoo.Cache.Controllers
+namespace Vvertigoo.Cache.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class CacheController : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class CacheController : ControllerBase
+    private readonly ICacheService cacheService;
+
+    public CacheController(ICacheService cacheService)
     {
-        private readonly ICacheService cacheService;
+        this.cacheService = cacheService;
+    }
 
-        public CacheController(ICacheService cacheService)
-        {
-            this.cacheService = cacheService;
-        }
+    [HttpGet("{id}")]
+    public async Task<string?> Get(string id)
+    {
+        return await cacheService.Get(id);
+    }
 
-        [HttpGet("{id}")]
-        public async Task<string?> Get(string id)
-        {
-            return await cacheService.Get(id);
-        }
-
-        [HttpPost("{id}")]
-        public async Task Set(string id, [FromBody, Required] string value)
-        {
-            await cacheService.Set(id, value);
-        }
+    [HttpPost("{id}")]
+    public async Task Set(string id, [FromBody, Required] string value)
+    {
+        await cacheService.Set(id, value);
     }
 }
+
